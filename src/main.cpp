@@ -28,6 +28,20 @@ void toggleLED(void *parameter)
     vTaskDelay(delayTime / portTICK_PERIOD_MS);
     digitalWrite(ledPin, LOW);
     vTaskDelay(delayTime / portTICK_PERIOD_MS);
+    // Memory Flow create and see how MCU handles it or reboots
+    // Here Stacks size only 1024 words (4KB)
+    int a = 1;
+    int b[10];
+    for (int i = 0; i < 10; i++)
+    {
+      b[i] = a * 2;
+      a = b[i];
+    }
+    Serial.println(b[5]);
+
+    // print out remaining stack for this task
+    Serial.print("Remaining stack for LED Task(in words): ");
+    Serial.println(uxTaskGetStackHighWaterMark(NULL));
   }
 }
 
